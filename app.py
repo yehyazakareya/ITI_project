@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
 #postgres://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d
 # Ensure responses aren't cached
@@ -39,7 +39,7 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 #db = SQL("sqlite:///finance.db")
 db = SQLAlchemy()
-db.init_app(app)
+db.create_all()
 
 # Make sure API key is set
 #if not os.environ.get("API_KEY"):
