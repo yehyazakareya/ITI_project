@@ -38,9 +38,9 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 #db = SQL("sqlite:///finance.db")
-db = SQLAlchemy()
-with app.app_context():
-    db.create_all()
+db = SQLAlchemy(app)
+#with app.app_context():
+db.create_all()
 
 # Make sure API key is set
 #if not os.environ.get("API_KEY"):
