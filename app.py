@@ -3,6 +3,7 @@ import re
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
+from flask_sqlalchemy import SQLAlchemy
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -15,6 +16,9 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+
+#postgres://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
@@ -33,7 +37,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db")
+#db = SQL("sqlite:///finance.db")
+db = SQLAlchemy()
+db.init_app(app)
 
 # Make sure API key is set
 #if not os.environ.get("API_KEY"):
