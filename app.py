@@ -10,6 +10,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from helpers import apology, login_required, lookup, usd
 
+
+db = SQLAlchemy()
+
 # Configure application
 app = Flask(__name__)
 
@@ -29,6 +32,7 @@ def after_request(response):
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
+
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -37,11 +41,10 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 #db = SQL("sqlite:///finance.db")
-db = SQLAlchemy(app)
 db.init_app(app)
 
 #with app.app_context():
-#db.create_all()
+db.create_all()
 
 # Make sure API key is set
 #if not os.environ.get("API_KEY"):
