@@ -11,7 +11,6 @@ from datetime import datetime
 from helpers import apology, login_required, lookup, usd
 
 
-db = SQLAlchemy()
 
 # Configure application
 app = Flask(__name__)
@@ -21,6 +20,8 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 #postgres://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d
+db = SQLAlchemy(app)
+
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):
@@ -41,10 +42,10 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 #db = SQL("sqlite:///finance.db")
-db.init_app(app)
+#db.init_app(app)
 
 #with app.app_context():
-#db.create_all()
+db.create_all()
 
 # Make sure API key is set
 #if not os.environ.get("API_KEY"):
