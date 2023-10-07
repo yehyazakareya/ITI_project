@@ -57,7 +57,7 @@ with app.app_context():
 
 
 @app.route('/')
-def loginUser():
+def index():
     return  render_template('index.html')
 
 @app.route("/register", methods=["GET", "POST"])
@@ -89,10 +89,10 @@ def register():
        password = generate_password_hash(request.form.get("pass"))
 
        username = request.form.get("user")
-       LoginVo = LoginVo()
-       LoginVo.loginUsername = username
-       LoginVo.loginPassword = password
-       db.session.add(LoginVo)
+       loginVo = LoginVo()
+       loginVo.loginUsername = username
+       loginVo.loginPassword = password
+       db.session.add(loginVo)
        db.session.commit()
        return render_template("login.html")
 
@@ -112,7 +112,7 @@ def login():
         username=request.form("username")
         password =request.form("password") 
 
-        LoginVo = LoginVo() 
+        loginVo = LoginVo() 
         loginList = LoginVo.query.filter_by(loginUsername=username, loginPassword=password) .first()     
         print(loginList)
         if loginList == None:
