@@ -87,7 +87,7 @@ def register():
 
        if re.search('[a-zA-Z]', pas) == None:
             return apology ("your password must contain letters")
-       password = generate_password_hash(request.form.get("pass"))
+       password = request.form.get("pass")
 
        username = request.form.get("user")
        loginVO = LoginVO()
