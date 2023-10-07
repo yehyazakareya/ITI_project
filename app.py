@@ -2,6 +2,7 @@ import os
 import re
 from datetime import timedelta
 from cs50 import SQL
+from sqlalchemy.sql import func
 from flask import Flask, flash, jsonify, redirect, render_template, request, session,url_for
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -27,7 +28,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://customers_7v3d_user:kn9X5E
 db = SQLAlchemy(app)
 
 class LoginVo(db.Model):
-    __tablename__='loginmaster'
+   # __tablename__='loginmaster'
     loginld = db.Column('loginld',db.Integer,primary_key=True,autoincrement=True)
     loginUsername = db.Column('username',db.string(100),nullable=False)
     loginPassword = db.Column('hash',db.string(100),nullable=False)
@@ -100,7 +101,7 @@ def login():
         
         else:  
          return render_template("login.html")
-        
+    
 # Ensure responses aren't cached
 # @app.after_request
 # def after_request(response):

@@ -1,9 +1,9 @@
 cs50
-Flask
+Flask == 2.2.2
 Flask-Session
 requests
 Gunicorn
-Flask-SQLAlchemy 
+Flask-SQLAlchemy  == 3.0.2
 SQLAlchemy
 click 
 werkzeug 
