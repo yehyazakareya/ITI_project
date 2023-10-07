@@ -102,23 +102,26 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-              
-       if request.method == "POST":
+        
+        """Log user in"""
+      
+        if request.method == "POST":
 
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
 
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            if not request.form.get("username"):
+                return apology("must provide username", 403)
 
-        username=request.form("username")
-        password =request.form("password") 
+            elif not request.form.get("password"):
+                return apology("must provide password", 403)
 
-        loginVO = LoginVO() 
-        loginList = LoginVO.query.filter_by(loginUsername=username, loginPassword=password) .first()     
-        print(loginList)
-        if loginList == None:
-            return apology("invalid username and/or password", 403)
+            username=request.form("username")
+            password =request.form("password") 
+
+            loginVO = LoginVO() 
+            loginList = LoginVO.query.filter_by(loginUsername=username, loginPassword=password) .first()     
+            print(loginList)
+            if loginList == None:
+                return apology("invalid username and/or password", 403)
         
         else:  
          return render_template("login.html")
