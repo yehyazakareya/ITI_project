@@ -29,7 +29,7 @@ db = SQLAlchemy(app)
 
 class LoginVO(db.Model):
     __tablename__='loginmaster'
-    loginld = db.Column('loginld',db.Integer,primary_key=True,autoincrement=True)
+    loginId = db.Column('loginid',db.Integer,primary_key=True,autoincrement=True)
     loginUsername = db.Column('username',db.String,nullable=False)
     loginPassword = db.Column('hash',db.String(100),nullable=False)
 
@@ -95,7 +95,7 @@ def register():
        loginVO.loginPassword = password
        db.session.add(loginVO)
        db.session.commit()
-       return render_template("login.html")
+       return render_template('login.html')
 
     else:
         return render_template('register.html')
@@ -124,7 +124,7 @@ def login():
                 return apology("invalid username and/or password", 403)
         
         else:  
-         return render_template("login.html")
+         return render_template('login.html')
     
 # Ensure responses aren't cached
 # @app.after_request
