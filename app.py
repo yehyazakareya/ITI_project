@@ -28,7 +28,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://customers_7v3d_user:kn9X5E
 db = SQLAlchemy(app)
 
 class LoginVo(db.Model):
-   # __tablename__='loginmaster'
+    __tablename__='loginmaster'
     loginld = db.Column('loginld',db.Integer,primary_key=True,autoincrement=True)
     loginUsername = db.Column('username',db.String,nullable=False)
     loginPassword = db.Column('hash',db.String(100),nullable=False)
