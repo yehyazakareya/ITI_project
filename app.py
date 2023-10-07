@@ -30,8 +30,8 @@ db = SQLAlchemy(app)
 class LoginVo(db.Model):
    # __tablename__='loginmaster'
     loginld = db.Column('loginld',db.Integer,primary_key=True,autoincrement=True)
-    loginUsername = db.Column('username',db.string(100),nullable=False)
-    loginPassword = db.Column('hash',db.string(100),nullable=False)
+    loginUsername = db.Column('username',db.String,nullable=False)
+    loginPassword = db.Column('hash',db.String(100),nullable=False)
 
 db.create_all()
 
