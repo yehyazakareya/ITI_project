@@ -113,8 +113,8 @@ def login():
             elif not request.form.get("password"):
                 return apology("must provide password", 403)
 
-            username=request.form("username")
-            password =request.form("password") 
+            username=request.form.get("username")
+            password =request.form.get("password") 
 
             loginVO = LoginVO() 
             loginList = LoginVO.query.filter_by(loginUsername=username, loginPassword=password) .first()     
