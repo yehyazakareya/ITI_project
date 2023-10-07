@@ -33,7 +33,8 @@ class LoginVo(db.Model):
     loginUsername = db.Column('username',db.String,nullable=False)
     loginPassword = db.Column('hash',db.String(100),nullable=False)
 
-db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 
