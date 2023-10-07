@@ -27,7 +27,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://customers_7v3d_user:kn9X5E
 #postgres://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d
 db = SQLAlchemy(app)
 
-class LoginVo(db.Model):
+class LoginVO(db.Model):
     __tablename__='loginmaster'
     loginld = db.Column('loginld',db.Integer,primary_key=True,autoincrement=True)
     loginUsername = db.Column('username',db.String,nullable=False)
@@ -89,10 +89,10 @@ def register():
        password = generate_password_hash(request.form.get("pass"))
 
        username = request.form.get("user")
-       loginVo = LoginVo()
-       loginVo.loginUsername = username
-       loginVo.loginPassword = password
-       db.session.add(loginVo)
+       loginVO = LoginVO()
+       loginVO.loginUsername = username
+       loginVO.loginPassword = password
+       db.session.add(loginVO)
        db.session.commit()
        return render_template("login.html")
 
@@ -101,14 +101,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-       
-       
-       
-       """Log user in"""
-
-        # Forget any user_id
-       session.clear()
-       
+              
        if request.method == "POST":
 
         if not request.form.get("username"):
@@ -120,8 +113,8 @@ def login():
         username=request.form("username")
         password =request.form("password") 
 
-        loginVo = LoginVo() 
-        loginList = LoginVo.query.filter_by(loginUsername=username, loginPassword=password) .first()     
+        loginVO = LoginVO() 
+        loginList = LoginVO.query.filter_by(loginUsername=username, loginPassword=password) .first()     
         print(loginList)
         if loginList == None:
             return apology("invalid username and/or password", 403)
