@@ -1,0 +1,9 @@
+                                          Table "public.loginmaster"
+    Column     |          Type          | Collation | Nullable |                   Default                    
+---------------+------------------------+-----------+----------+----------------------------------------------
+ loginld       | integer                |           | not null | nextval('loginmaster_loginld_seq'::regclass)
+ loginusername | character varying(200) |           | not null | 
+ loginpassword | character varying(200) |           | not null | 
+Indexes:
+    "loginmaster_pkey" PRIMARY KEY, btree (loginld)
+
