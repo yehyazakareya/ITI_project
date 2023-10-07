@@ -30,8 +30,8 @@ db = SQLAlchemy(app)
 class LoginVO(db.Model):
     __tablename__='loginmaster'
     loginId = db.Column('loginid',db.Integer,primary_key=True,autoincrement=True)
-    loginUsername = db.Column('username',db.String,nullable=False)
-    loginPassword = db.Column('hash',db.String(100),nullable=False)
+    loginUsername = db.Column('username',db.String(100),nullable=False)
+    loginPassword = db.Column('password',db.String(100),nullable=False)
 
 # Ensure responses aren't cached
 @app.after_request
