@@ -1,8 +1,6 @@
 import os
 import re
 from datetime import timedelta
-from cs50 import SQL
-from sqlalchemy.sql import func
 from flask import Flask, flash, jsonify, redirect, render_template, request, session,url_for
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -20,9 +18,10 @@ app = Flask(__name__)
 # Ensure templates are auto-reloaded
 #app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-app.secret_key='sessionData'
-#app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL')
+#app.secret_key='sessionData'
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #postgres://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d
 db = SQLAlchemy(app)
 
@@ -50,8 +49,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+db.create_all()
 
 
 
