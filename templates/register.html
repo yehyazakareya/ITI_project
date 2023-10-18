@@ -5,16 +5,48 @@
 {% endblock %}
 
 {% block main %}
-<form action="/register" method="post">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+     <form action="/register" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="user" placeholder="Username" type="text">
         </div>
         <div class="form-group">
-            <input class="form-control" name="pass" placeholder="Password" type="password">
+            <input class="form-control" name="pass" placeholder="Password" type="password" required="" id="password">
+            <i class="far fa-eye toggle-password" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
         </div>
         <div class="form-group">
-            <input class="form-control" name="passconfirm" placeholder="confirm" type="password">
+            <input class="form-control" name="passconfirm" placeholder="Confirm Password" type="password" required="" id="confirmPassword">
+            <i class="far fa-eye toggle-password" id="toggleConfirmPassword" style="margin-left: -30px; cursor: pointer;"></i>
         </div>
-        <button class="btn btn-primary" type="submit">register</button>
+        <button class="btn btn-primary" type="submit">Register</button>
     </form>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const togglePasswordButton = document.getElementById('togglePassword');
+        const toggleConfirmPasswordButton = document.getElementById('toggleConfirmPassword');
+
+        togglePasswordButton.addEventListener('click', togglePasswordVisibility);
+        toggleConfirmPasswordButton.addEventListener('click', toggleConfirmPasswordVisibility);
+
+        function togglePasswordVisibility() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+
+        function toggleConfirmPasswordVisibility() {
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+            } else {
+                confirmPasswordInput.type = 'password';
+            }
+        }
+    </script>
+
 {% endblock %}
+

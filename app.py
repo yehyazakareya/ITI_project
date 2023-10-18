@@ -1,9 +1,8 @@
 import os
 import re
-from datetime import timedelta
-from flask import Flask, flash, jsonify, redirect, render_template, request, session,url_for
+from cs50 import SQL
+from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -13,23 +12,18 @@ from helpers import apology, login_required, lookup, usd
 
 
 # Configure application
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 # Ensure templates are auto-reloaded
 #app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-app.secret_key='sessionData'
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL')
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#postgres://customers_7v3d_user:kn9X5ExKN0OHh46xYGPOuNwx4RzbtRTI@dpg-ckg4bmuct0pc73aivs30-a.oregon-postgres.render.com/customers_7v3d
-db = SQLAlchemy(app)
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-class LoginVO(db.Model):
-    __tablename__='loginmaster'
-    loginId = db.Column('loginid',db.Integer,primary_key=True,autoincrement=True)
-    loginUsername = db.Column('username',db.String(100),nullable=False)
-    loginPassword = db.Column('password',db.String(100),nullable=False)
+#db = app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+#postgres://prettyprinted_render_example_bf01_user:AnCyUkvHhiou1kgmBFVGP1mNz3x8uNoQ@dpg-ckfup9uafg7c73bvcrdg-a.oregon-postgres.render.com/prettyprinted_render_example_bf01
+#db.init_app(app)
+
 
 # Ensure responses aren't cached
 @app.after_request
@@ -49,60 +43,59 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+   # db.create_all()
+
+
+db = SQL("sqlite:///finance.db")
 
 
 
 @app.route('/')
 @login_required
 def index():
-    return  render_template('index.html')
+    return  redirect('login.html')
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    ls = re.compile('[@_!#$%&*?~:]')
     if request.method == "POST":
-       
-       if not request.form.get("user"):      
-             return apology("You must provide a username")
-       
-       user = request.form.get("user") 
+        if not request.form.get("user"):
+            return apology("You must provide a username")
+        user = request.form.get("user")
+        names = db.execute("SELECT username FROM users ")
+        for name in names:
+            if  name["username"] == user:
+                return apology("The username is already taken")
 
-       if not request.form.get("pass") == request.form.get("passconfirm"):
+        if not request.form.get("pass") == request.form.get("passconfirm"):
             return apology("sorry, your passwords didn't match")
 
-       if not request.form.get("pass"):
+        if not request.form.get("pass"):
             return apology("You must provide password")
 
-       if not request.form.get("passconfirm"):
+        if not request.form.get("passconfirm"):
             return apology("You must provide password")
-       pas = request.form.get("pass")
-
-       if len(pas) < 6:
+        pas = request.form.get("pass")
+        if len(pas) < 6:
             return apology("your password should be at least 6 characters")
-      # if ls.search(pas) == None:
-            #return apology("your password must contain one or more of these characters: @ _ ! # $ % & * ? ~ : ")
-
-       if re.search('[a-zA-Z]', pas) == None:
+        if ls.search(pas) == None:
+            return apology("your password must contain one or more of these characters: @ _ ! # $ % & * ? ~ : ")
+        if re.search('[a-zA-Z]', pas) == None:
             return apology ("your password must contain letters")
-       password = request.form.get("pass")
-
-       username = request.form.get("user")
-       loginVO = LoginVO()
-       loginVO.loginUsername = username
-       loginVO.loginPassword = password
-       db.session.add(loginVO)
-       db.session.commit()
-       return render_template('login.html')
-
+        password = generate_password_hash(request.form.get("pass"))
+        username = request.form.get("user")
+        db.execute("INSERT INTO users (username, hash) values(:username, :password)", username=username, password=password)
+        return render_template("login.html")
     else:
-        return render_template('register.html')
+        return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-        
+
         """Log user in"""
-      
+        session.clear()
+
         if request.method == "POST":
 
 
@@ -112,18 +105,42 @@ def login():
             elif not request.form.get("password"):
                 return apology("must provide password", 403)
 
-            username=request.form.get("username")
-            password =request.form.get("password") 
+            # Query database for username
+            rows = db.execute("SELECT * FROM users WHERE username = :username",
+                          username=request.form.get("username"))
 
-            loginVO = LoginVO() 
-            loginList = LoginVO.query.filter_by(loginUsername=username, loginPassword=password) .first()     
-            print(loginList)
-            if loginList == None:
+            # Ensure username exists and password is correct
+            if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
                 return apology("invalid username and/or password", 403)
-        
-        else:  
-         return render_template('login.html')
-    
+
+            # Remember which user has logged in
+            session["user_id"] = rows[0]["id"]
+
+            # Redirect user to home page
+            return render_template("/index2.html")
+
+        else:
+            return render_template('login.html')
+
+@app.route("/index2", methods=["GET","POST"])
+@login_required
+def index2():
+    if request.method == "POST":
+        return render_template("/index.html")
+
+    else:
+        return render_template("/index2.html")
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
 # Ensure responses aren't cached
 # @app.after_request
 # def after_request(response):
